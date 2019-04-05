@@ -1,6 +1,7 @@
 package com.luxoft.ak47;
 
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -11,7 +12,7 @@ class TradeEventControllerTest {
     void tradeEvent() {
         RestAssured
                 .given()
-                .when().get("/tradeEvent")
+                .when().get("/tradeEvent/1")
                 .then().statusCode(200);
     }
 
@@ -24,10 +25,21 @@ class TradeEventControllerTest {
     }
 
     @Test
-    void testingContentVersion() {
+    void testingContentVersionAndId() {
+        String id = "sampleID";
         RestAssured
                 .given()
-                .when().get("/tradeEvent")
-                .then().body("tradeEvent.version", equalTo("0"));
+                .when().get("/tradeEvent/{id}", id)
+                .then()
+                    .body("tradeEvent.version", equalTo("0"))
+                    .body("tradeEvent.id", equalTo(id));
+    }
+
+    @Test
+    void shouldHaveLocation() {
+        RestAssured
+                .given()
+                .get("/tradeEvent/OBS_12345")
+                .then().body("tradeEvent.tradeLocation", Matchers.equalTo("HKG"));
     }
 }
