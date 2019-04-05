@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.awt.*;
 
-fff
+
 @RestController
 public class TradeEventController {
     @RequestMapping(value = "/tradeEvent/{id}", produces = MediaType.TEXT_XML_VALUE)
