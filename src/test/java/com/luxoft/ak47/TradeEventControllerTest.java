@@ -3,6 +3,7 @@ package com.luxoft.ak47;
 import io.restassured.RestAssured;
 import org.assertj.core.api.AutoCloseableSoftAssertions;
 import org.hamcrest.Matchers;
+import org.hamcrest.xml.HasXPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -39,11 +40,19 @@ class TradeEventControllerTest {
     }
 
     @Test
-    void isLocationNotNull() {
+    void isLocationPopulatedForOBStrade() {
         RestAssured
                 .given()
                 .get("/tradeEvent/OBS_12345")
                 .then().body("tradeEvent.tradeLocation", Matchers.not("null"));
+    }
+
+    @Test
+    void isLocationTagMissingForNONOBStrade() {
+        RestAssured
+                .given()
+                .get("/tradeEvent/MOR_12345")
+                .then().log().all().body(Matchers.not(HasXPath.hasXPath("/tradeEvent/tradeLocation")));
     }
 
     @Test

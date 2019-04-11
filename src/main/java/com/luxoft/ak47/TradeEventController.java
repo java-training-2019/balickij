@@ -16,20 +16,23 @@ public class TradeEventController {
     String tradeEvent(@PathVariable String id) {
         String xmlReturned;
         String tradeLocation;
+        String tradeLocationXml;
+        Random Randomizer = new Random();
         if (id.contains("OBS")) {
-            tradeLocation = "LOC";
+            List<String> tradeLocations = Arrays.asList("HKG","SGP","POL","USA","AUS");
+            tradeLocation = tradeLocations.get(Randomizer.nextInt(tradeLocations.size()));
+            tradeLocationXml = "<tradeLocation>" + tradeLocation + "</tradeLocation>";
         }
         else {
-            tradeLocation = null;
+            tradeLocationXml = "";
         }
         List<String> currList = Arrays.asList("EUR","SGD","USD","AUD","PLN");
-        Random currRandomizer = new Random();
-        String curr = currList.get(currRandomizer.nextInt(currList.size()));
+        String curr = currList.get(Randomizer.nextInt(currList.size()));
         xmlReturned="<tradeEvent>" +
                 "<id>" + id + "</id>" +
                 "<version>0</version>" +
-                "<tradeLocation>" + tradeLocation + "</tradeLocation>" +
-                "<currency>" + "qqqq" + "</currency>" +
+                 tradeLocationXml +
+                "<currency>" + curr + "</currency>" +
                 "</tradeEvent>";
         return(xmlReturned);
     }
