@@ -29,7 +29,7 @@ public class TradeEventController {
                 "<id>" + id + "</id>" +
                 "<version>0</version>" +
                 "<tradeLocation>" + tradeLocation + "</tradeLocation>" +
-                "<currency>" + curr + "</currency>" +
+                "<currency>" + "qqqq" + "</currency>" +
                 "</tradeEvent>";
         return(xmlReturned);
     }
