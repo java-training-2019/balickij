@@ -1,7 +1,9 @@
 package com.luxoft.ak47;
 
 import io.restassured.RestAssured;
+import org.apache.commons.lang3.Validate;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -41,5 +43,16 @@ class TradeEventControllerTest {
                 .given()
                 .get("/tradeEvent/OBS_12345")
                 .then().body("tradeEvent.tradeLocation", Matchers.not("null"));
+    }
+
+    @Test
+    void doesCurrencyHave3CapitalLetters() {
+        String currency = RestAssured
+                            .given()
+                            .get("/tradeEvent/OBS_12345")
+                            .then().log().body().extract().xmlPath().getString("tradeEvent.currency");
+        if (!currency.matches("[A-Z]{3}")) {
+            Assertions.fail("co to za waluta?! " + currency);
+        }
     }
 }
