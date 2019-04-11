@@ -18,7 +18,7 @@ public class TradeEventController {
         String tradeLocation;
         String tradeLocationXml;
         Random Randomizer = new Random();
-        if (id.contains("OBS")) {
+        if (id.contains("OBS_")) {
             List<String> tradeLocations = Arrays.asList("HKG","SGP","POL","USA","AUS");
             tradeLocation = tradeLocations.get(Randomizer.nextInt(tradeLocations.size()));
             tradeLocationXml = "<tradeLocation>" + tradeLocation + "</tradeLocation>";
