@@ -6,12 +6,15 @@ import org.hamcrest.Matchers;
 import org.hamcrest.xml.HasXPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 class TradeEventControllerTest {
-
+    // begin TEST DATA
+    // OBS trade
+        private String OBStradeId = "OBS_123456789";
+        private String OBStradeVersion = "0";
+        private String OBStradeIdVer = OBStradeId + "_" + OBStradeVersion;
+    // end TEST DATA
     @Test
     void tradeEvent() {
         RestAssured
@@ -23,35 +26,31 @@ class TradeEventControllerTest {
     @Test
     void testingNonExistentPage() {
         RestAssured
-                .given()
                 .when().get("/nonExistentPage")
                 .then().statusCode(404);
     }
 
     @Test
     void testingContentVersionAndId() {
-        String id = "sampleID";
         RestAssured
-                .given()
-                .when().get("/tradeEvent/{id}", id)
+                .when().get("/tradeEvent/{id}", OBStradeIdVer)
                 .then()
-                    .body("tradeEvent.version", equalTo("0"))
-                    .body("tradeEvent.id", equalTo(id));
+                    .body("tradeEvent.version", equalTo(OBStradeVersion))
+                    .body("tradeEvent.id", equalTo(OBStradeId));
     }
 
     @Test
     void isLocationPopulatedForOBStrade() {
         RestAssured
                 .given()
-                .get("/tradeEvent/OBS_12345")
+                .get("/tradeEvent/{id}", "OBS_123456789_0")
                 .then().body("tradeEvent.tradeLocation", Matchers.not("null"));
     }
 
     @Test
     void isLocationTagMissingForNONOBStrade() {
         RestAssured
-                .given()
-                .get("/tradeEvent/MOR_12345")
+                .get("/tradeEvent/{id}", "MOR_1234567_0")
                 .then().log().all().body(Matchers.not(HasXPath.hasXPath("/tradeEvent/tradeLocation")));
     }
 
@@ -59,7 +58,7 @@ class TradeEventControllerTest {
     void doesCurrencyHave3CapitalLetters() {
         String currency = RestAssured
                             .given()
-                            .get("/tradeEvent/OBS_12345")
+                            .get("/tradeEvent/{id}", "OBS_123456789_0")
                             .then().log().body().extract().xmlPath().getString("tradeEvent.currency");
         if (!currency.matches("[A-Z]{3}")) {
             Assertions.fail("co to za waluta?! " + currency);
@@ -70,7 +69,7 @@ class TradeEventControllerTest {
     void doesCurrencyHave3CapitalLetters_properAssertion() {
         String currency = RestAssured
                 .given()
-                .get("/tradeEvent/OBS_12345")
+                .get("/tradeEvent/{id}", "OBS_123456789_0")
                 .then().log().body().extract().xmlPath().getString("tradeEvent.currency");
         try (AutoCloseableSoftAssertions softlyAssert = new AutoCloseableSoftAssertions()) {
             softlyAssert.assertThat(currency)

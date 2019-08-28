@@ -23,7 +23,6 @@ public class TradeEventController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        System.out.println(xmlReturnedAsString.toString());
         return(xmlReturnedAsString.toString());
     }
 }
